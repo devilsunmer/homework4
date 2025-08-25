@@ -29,4 +29,67 @@
 
 然後是我實際設計的大致目錄：
 
+src/<br>
+└── main/<br>
+    └── java/<br>
+        ├── controller/<br>
+        │   ├── Shop.java<br>
+        │   └── StaffSystem.java<br>
+        │<br>
+        ├── dao/<br>
+        │   ├── MemberDao.java<br>
+        │   ├── OrderAllDao.java<br>
+        │   ├── OrderItemDao.java<br>
+        │   ├── ProductDao.java<br>
+        │   ├── ProductStockDao.java<br>
+        │   ├── ProductSystemViewDao.java<br>
+        │   └── StaffDao.java<br>
+        │<br>
+        │   └── impl/<br>
+        │       ├── MemberDaoImpl.java<br>
+        │       ├── OrderAllDaoImpl.java<br>
+        │       ├── OrderItemDaoImpl.java<br>
+        │       ├── ProductDaoImpl.java<br>
+        │       ├── ProductStockDaoImpl.java<br>
+        │       ├── ProductSystemViewDaoImpl.java<br>
+        │       └── StaffDaoImpl.java<br>
+        │<br>
+        ├── model/<br>
+        │   ├── Category.java<br>
+        │   ├── Member.java<br>
+        │   ├── OrderAll.java<br>
+        │   ├── OrderData.java<br>
+        │   ├── OrderItem.java<br>
+        │   ├── Product.java<br>
+        │   ├── ProductStock.java<br>
+        │   ├── ProductSystemView.java<br>
+        │   └── Staff.java<br>
+        │<br>
+        ├── service/<br>
+        │   ├── MemberService.java<br>
+        │   ├── OrderAllService.java<br>
+        │   ├── OrderItemService.java<br>
+        │   ├── ProductService.java<br>
+        │   ├── ProductStockService.java<br>
+        │   └── StaffService.java<br>
+        │<br>
+        │   └── impl/<br>
+        │       ├── MemberServiceImpl.java<br>
+        │       ├── OrderAllServiceImpl.java<br>
+        │       ├── OrderItemServiceImpl.java<br>
+        │       ├── ProductServiceImpl.java<br>
+        │       ├── ProductStockServiceImpl.java<br>
+        │       └── StaffServiceImpl.java<br>
+        │<br>
+        └── util/<br>
+            ├── ButtonTool.java<br>
+            ├── DbConnection.java<br>
+            ├── FileTool.java<br>
+            ├── OrderTool.java<br>
+            ├── SQLTool.java<br>
+            └── SystemTool.java<br>
+
+剩下的部分可以參考我給的檔案內容來理解內容。
+
+
 
