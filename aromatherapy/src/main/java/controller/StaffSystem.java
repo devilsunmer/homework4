@@ -6,8 +6,6 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.print.PrinterException;
-import java.awt.print.PrinterJob;
 import java.io.File;
 import java.sql.Date;
 import java.time.LocalDate;
@@ -1094,6 +1092,11 @@ public class StaffSystem extends JFrame {
 				if(productName!=null&&category!=null&&overview!=null&&productCost!=null&&productPrice!=null) {
 				 new ProductServiceImpl().addProduct(new Product(productName,category,overview,productCost,productPrice));
 					JOptionPane.showMessageDialog(null, "新增產品成功");
+					productNameField.setText("");
+					catergoryField.setSelectedIndex(0);
+					productOverviewField.setText("");
+					productCostField.setValue(0);
+					productPriceField.setValue(0);	
 				}else {
 					JOptionPane.showMessageDialog(null, "新增產品失敗，請確認是否有未填寫的地方");					
 				}
@@ -1110,8 +1113,8 @@ public class StaffSystem extends JFrame {
 				productNameField.setText("");
 				catergoryField.setSelectedIndex(0);
 				productOverviewField.setText("");
-				productCostField.setValue("0");
-				productPriceField.setValue("0");	
+				productCostField.setValue(0);
+				productPriceField.setValue(0);	
 			}
 		});
 		clearProductNewButton.setFont(new Font("微軟正黑體", Font.BOLD, 15));
@@ -1191,6 +1194,7 @@ public class StaffSystem extends JFrame {
 					pp.setProductStockDate(date);
 					new ProductStockServiceImpl().addProductStock(pp);
 					JOptionPane.showMessageDialog(null, "確認進貨");
+					spinner.setValue(0);
 				}
 				JOptionPane.showMessageDialog(null, "");
 			}
@@ -1213,6 +1217,7 @@ public class StaffSystem extends JFrame {
 					pp.setProductStockDate(date);
 					new ProductStockServiceImpl().addProductStock(pp);
 					JOptionPane.showMessageDialog(null, "確認出貨");
+					spinner_1.setValue(0);
 				}
 				JOptionPane.showMessageDialog(null, "");
 			}
@@ -1285,7 +1290,7 @@ public class StaffSystem extends JFrame {
 				Member mem=(Member)FileTool.readFiled("memberMemry.txt");
 				mem=new Member();
 				FileTool.saveFiled(mem, "memberMemry.txt");
-				Shop frame = new Shop();
+				ShopIndex frame = new ShopIndex();
 				frame.setVisible(true);
 				dispose();
 			}
