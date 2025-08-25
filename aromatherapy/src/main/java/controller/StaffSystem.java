@@ -1,16 +1,20 @@
 package controller;
 
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.io.File;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import javax.swing.AbstractListModel;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
@@ -51,8 +55,6 @@ import util.ButtonTool;
 import util.FileTool;
 import util.ReporterTool;
 import util.SystemTool;
-import javax.swing.AbstractListModel;
-import java.awt.BorderLayout;
 
 public class StaffSystem extends JFrame {
 
@@ -1264,16 +1266,11 @@ public class StaffSystem extends JFrame {
 		printButton.setBounds(191, 410, 110, 39);
 		print.add(printButton);
 		
-		JButton btnNewButton = new JButton("顯示圖表");
+		JButton btnNewButton = new JButton("列印圖表");
 		btnNewButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				Member mem=(Member)FileTool.readFiled("memberMemry.txt");
-				mem=new Member();
-				FileTool.saveFiled(mem, "memberMemry.txt");
-				Shop frame = new Shop();
-				frame.setVisible(true);
-				dispose();
+			    ButtonTool.printPanel(panel);
 			}
 		});
 		btnNewButton.setFont(new Font("微軟正黑體", Font.BOLD, 14));

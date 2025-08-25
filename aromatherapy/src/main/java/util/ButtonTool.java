@@ -3,13 +3,18 @@ package util;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
+import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.print.Printable;
+import java.awt.print.PrinterException;
+import java.awt.print.PrinterJob;
 import java.util.List;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextArea;
@@ -233,5 +238,44 @@ public class ButtonTool {
 		}
 		orderOutput.setText(sb.toString());
 	}
+	
+	public static void printPanel(JPanel panel) {
+	    PrinterJob job = PrinterJob.getPrinterJob();
+	    job.setJobName("列印 JPanel");
+
+	    job.setPrintable((graphics, pageFormat, pageIndex) -> {
+	        if (pageIndex > 0) {
+	            return Printable.NO_SUCH_PAGE;
+	        }
+
+	        Graphics2D g2d = (Graphics2D) graphics;
+	        g2d.translate(pageFormat.getImageableX(), pageFormat.getImageableY());
+
+	        // 縮放以適配頁面
+	        double panelWidth = panel.getWidth();
+	        double panelHeight = panel.getHeight();
+	        double pageWidth = pageFormat.getImageableWidth();
+	        double pageHeight = pageFormat.getImageableHeight();
+
+	        double scaleX = pageWidth / panelWidth;
+	        double scaleY = pageHeight / panelHeight;
+	        double scale = Math.min(scaleX, scaleY); // 避免超出頁面
+
+	        g2d.scale(scale, scale);
+
+	        panel.printAll(g2d);
+	        return Printable.PAGE_EXISTS;
+	    });
+
+	    if (job.printDialog()) {
+	        try {
+	            job.print();
+	        } catch (PrinterException e) {
+	            e.printStackTrace();
+	            JOptionPane.showMessageDialog(panel, "列印失敗：" + e.getMessage());
+	        }
+	    }
+	}
+
 
 }
