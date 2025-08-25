@@ -100,23 +100,25 @@ public class OrderTool {
 	public static List<String> custOrderCheck(JTable orderView,Member member) {
 		List<String> cust = new ArrayList<>();
 		cust.add("預計購買商品如下，\n");
-		cust.add("商品名稱：　　　　　　　　購買數量：　　　　　　商品小計價格：\r\n");
+		cust.add("商品名稱：\t購買數量：\t商品小計價格：\r\n");
 
 		DefaultTableModel model = (DefaultTableModel) orderView.getModel();
 		int rowCount = model.getRowCount();
-		double allPrice = 0;
-		for (int i = 0; i < rowCount; i++) {
-			String name = model.getValueAt(i, 0).toString(); // 商品名稱
-			String quantity = model.getValueAt(i, 1).toString(); // 購買數量
-			String price = model.getValueAt(i, 2).toString();// 商品單價價格
-			Double pricaCount = (Double.parseDouble(price)) * (Integer.parseInt(quantity));
-			pricaCount=subTotal(member,pricaCount);
-			allPrice = allPrice + pricaCount;
-			String formatted = String.format("%-20s\t%-10s\t%-10s", name, quantity, pricaCount.toString());
-			cust.add(formatted + "\r\n");
+		if(rowCount>0) {
+			double allPrice = 0;
+			for (int i = 0; i < rowCount; i++) {
+				String name = model.getValueAt(i, 0).toString(); // 商品名稱
+				String quantity = model.getValueAt(i, 1).toString(); // 購買數量
+				String price = model.getValueAt(i, 2).toString();// 商品單價價格
+				Double pricaCount = (Double.parseDouble(price)) * (Integer.parseInt(quantity));
+				pricaCount=subTotal(member,pricaCount);
+				allPrice = allPrice + pricaCount;
+				String formatted = String.format("%-20s\t%-10s\t%-10s", name, quantity, pricaCount.toString());
+				cust.add(formatted + "\r\n");
+			}
+			allPrice=allPrice(orderView,member,allPrice);
+			cust.add("預計商品總金額：" + allPrice + "元");
 		}
-		allPrice=allPrice(orderView,member,allPrice);
-		cust.add("預計商品總金額：" + allPrice + "元");
 		return cust;
 	}
 	

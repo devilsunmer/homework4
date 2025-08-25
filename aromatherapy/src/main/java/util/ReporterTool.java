@@ -1,5 +1,6 @@
 package util;
 
+import java.awt.Dimension;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -12,10 +13,16 @@ import java.util.Map;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextArea;
 
 import org.apache.poi.hssf.usermodel.HSSFRow;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.data.category.DefaultCategoryDataset;
 
 import dao.impl.ProductSystemViewDaoImpl;
 import model.Member;
@@ -277,7 +284,7 @@ public class ReporterTool {
 	    }
 	}
 	
-	public static void forPrint(String filename, String chooseName) {
+	public static void forPrint(JTextArea area,String filename, String chooseName) {
 		try {
 			File dir = new File("reporter");
 			if (!dir.exists()) {
@@ -293,12 +300,7 @@ public class ReporterTool {
 			}
 
 			// 預覽
-			boolean confirmed = FileTool.previewReport(file.getAbsolutePath());
-			if (!confirmed) {
-				JOptionPane.showMessageDialog(null, "已取消列印");
-				return;
-			}
-
+			FileTool.previewReport(area,file.getAbsolutePath());
 			// 分開處理 Excel 與 TXT 列印
 			if (chooseName.endsWith(".xls")) {
 				FileTool.printExcelAsTable(file.getAbsolutePath());
@@ -317,5 +319,65 @@ public class ReporterTool {
 			JOptionPane.showMessageDialog(null, "列印時發生錯誤：" + ex.getMessage());
 		}
 	}
+	
+	public static JPanel createProductStockChart(JPanel panel,List<ProductSystemView> productStockList) {
+        // 建立資料集
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+
+        for (ProductSystemView product : productStockList) {
+            // 以產品名稱為 X 軸，現有數量為 Y 軸
+        	dataset.addValue(product.getIn(), "總進貨量", product.getName());
+        	dataset.addValue(product.getOut(), "總出貨量", product.getName());
+            dataset.addValue(product.getNowHave(), "庫存數量", product.getName());
+        }
+
+        // 建立柱狀圖
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "產品庫存進出圖",    // 標題
+                "產品名稱",       // X軸標籤
+                "數量",           // Y軸標籤
+                dataset);
+
+        // 建立顯示圖表的面板
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        Dimension size = panel.getSize();
+        chartPanel.setPreferredSize(size);
+
+        return chartPanel;
+    }
+	
+	public static JPanel createCust(JPanel panel) {
+        // 建立資料集
+        DefaultCategoryDataset dataset = new DefaultCategoryDataset();
+        List<Member> MEMBERlIST=new MemberServiceImpl().itsMember();
+        Integer memberValue=0;
+        Integer custValue=0;
+        for (Member o : MEMBERlIST) {
+        	o.getMemberName();
+        	memberValue++;
+        }
+        List<Member> cust=new MemberServiceImpl().notMember();
+        for(Member o:cust)
+        {
+        	custValue++;
+        }
+        
+        dataset.addValue(memberValue, "會員數量", "會員");
+        dataset.addValue(custValue, "非會員數量", "潛在客戶");
+
+        // 建立柱狀圖
+        JFreeChart barChart = ChartFactory.createBarChart(
+                "客戶比較圖",    // 標題
+                "會員／非會員",       // X軸標籤
+                "數量",           // Y軸標籤
+                dataset);
+
+        // 建立顯示圖表的面板
+        ChartPanel chartPanel = new ChartPanel(barChart);
+        Dimension size = panel.getSize();
+        chartPanel.setPreferredSize(size);
+
+        return chartPanel;
+    }
 
 }

@@ -5,6 +5,7 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.io.File;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -26,6 +27,8 @@ import javax.swing.JTextField;
 import javax.swing.SpinnerNumberModel;
 import javax.swing.SwingConstants;
 import javax.swing.border.EmptyBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.table.AbstractTableModel;
 
 import dao.impl.ProductSystemViewDaoImpl;
@@ -48,6 +51,7 @@ import util.ButtonTool;
 import util.FileTool;
 import util.ReporterTool;
 import util.SystemTool;
+import javax.swing.AbstractListModel;
 
 public class StaffSystem extends JFrame {
 
@@ -98,6 +102,7 @@ public class StaffSystem extends JFrame {
 	/**
 	 * Create the frame.
 	 */
+	@SuppressWarnings("serial")
 	public StaffSystem() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setBounds(200, 100, 600, 600);
@@ -600,6 +605,7 @@ public class StaffSystem extends JFrame {
 		excel.add(scrollPane1);
 
 		JList<String> excellist = new JList<>(ReporterTool.excelChoose());
+		excellist.setFont(new Font("微軟正黑體", Font.BOLD, 14));
 		scrollPane1.setViewportView(excellist);
 
 		JLabel lblNewLabel_2_4_2_1_2_1 = new JLabel("可選擇excel匯出：");
@@ -635,9 +641,6 @@ public class StaffSystem extends JFrame {
 		scrollPane_1.setBounds(57, 63, 372, 110);
 		word.add(scrollPane_1);
 
-		JList<String> txtlist = new JList<>(FileTool.getAvailableTxt());
-		scrollPane_1.setViewportView(txtlist);
-
 		JLabel lblNewLabel_2_4_2_1_2_1_1 = new JLabel("可選擇文字檔存檔：");
 		lblNewLabel_2_4_2_1_2_1_1.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		lblNewLabel_2_4_2_1_2_1_1.setBounds(26, 22, 153, 31);
@@ -657,6 +660,21 @@ public class StaffSystem extends JFrame {
 		viewTxtOutput.setBounds(67, 178, 349, 177);
 		word.add(viewTxtOutput);
 
+		JList<String> txtlist = new JList<>(FileTool.getAvailableTxt());
+		txtlist.setFont(new Font("微軟正黑體", Font.BOLD, 14));
+		txtlist.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+			        String selectedFileName = txtlist.getSelectedValue();
+			        if (selectedFileName != null) {
+			        	File file = new File("reporter/" + selectedFileName);
+			            FileTool.previewReport(viewTxtOutput, file.getAbsolutePath());
+			        }
+				}
+			}
+		});
+		scrollPane_1.setViewportView(txtlist);
+
 		JPanel print = new JPanel();
 		overviewManage.addTab("列印", null, print, null);
 		print.setLayout(null);
@@ -665,31 +683,86 @@ public class StaffSystem extends JFrame {
 		scrollPane_1_1.setBounds(61, 51, 372, 110);
 		print.add(scrollPane_1_1);
 
-		JList<String> printlist = new JList<String>(FileTool.getAvailableTxt());
-		scrollPane_1_1.setViewportView(printlist);
-
 		JLabel lblNewLabel_2_4_2_1_2_1_1_1 = new JLabel("可選擇檔案列印：");
 		lblNewLabel_2_4_2_1_2_1_1_1.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		lblNewLabel_2_4_2_1_2_1_1_1.setBounds(27, 10, 153, 31);
 		print.add(lblNewLabel_2_4_2_1_2_1_1_1);
+		
+		JScrollPane scrollPane_2 = new JScrollPane();
+		scrollPane_2.setBounds(10, 171, 463, 232);
+		print.add(scrollPane_2);
 
 		JTextArea viewPrintOutput = new JTextArea();
-		viewPrintOutput.setBounds(10, 171, 463, 232);
-		print.add(viewPrintOutput);
+		scrollPane_2.setViewportView(viewPrintOutput);
+		viewPrintOutput.setFont(new Font("微軟正黑體", Font.BOLD, 14));
 
-		JPanel statisticalChart = new JPanel();
-		overviewManage.addTab("統計圖表", null, statisticalChart, null);
-		statisticalChart.setLayout(null);
+		JList<String> printlist = new JList<String>(FileTool.getAvailable());
+		printlist.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				if (!e.getValueIsAdjusting()) {
+			        String selectedFileName = printlist.getSelectedValue();
+			        if (selectedFileName != null) {
+			        	File file = new File("reporter/" + selectedFileName);
+			            FileTool.previewReport(viewPrintOutput, file.getAbsolutePath());
+			        }
+				}
+			}
+		});
+		printlist.setFont(new Font("微軟正黑體", Font.BOLD, 14));
+		scrollPane_1_1.setViewportView(printlist);
 
-		JLabel lblNewLabel_3 = new JLabel("最後處理");
-		lblNewLabel_3.setHorizontalAlignment(SwingConstants.CENTER);
-		lblNewLabel_3.setFont(new Font("微軟正黑體", Font.BOLD | Font.ITALIC, 18));
-		lblNewLabel_3.setBounds(120, 164, 207, 92);
-		statisticalChart.add(lblNewLabel_3);
+		JPanel chart = new JPanel();
+		overviewManage.add(chart);
+		overviewManage.addTab("圖表", null, chart, null);
+		chart.setLayout(null);
+		
+		JPanel panel = new JPanel();
+		panel.setBounds(24, 62, 425, 218);
+		chart.add(panel);
+		
+		JScrollPane scrollPane_3 = new JScrollPane();
+		scrollPane_3.setBounds(62, 316, 137, 113);
+		chart.add(scrollPane_3);
+		
+		JList<String> list = new JList<>();
+		list.addListSelectionListener(new ListSelectionListener() {
+			public void valueChanged(ListSelectionEvent e) {
+				String name=list.getSelectedValue().toString();
+				if(name.equals("產品庫存體現圖")) {
+					panel.removeAll(); // 🔴 先清空 panel 上的所有元件
+				    JPanel chartPanel = ReporterTool.createProductStockChart(panel,productStockList);
+				    panel.add(chartPanel); // 🔵 加入新的圖表
+				    panel.revalidate(); // 🔄 通知 Swing 重新計算 layout
+				    panel.repaint();
+				}else if(name.equals("客戶比較")){
+					panel.removeAll(); // 🔴 先清空 panel 上的所有元件
+				    JPanel chartPanel = ReporterTool.createCust(panel);
+				    panel.add(chartPanel); // 🔵 加入新的圖表
+				    panel.revalidate(); // 🔄 通知 Swing 重新計算 layout
+				    panel.repaint();
+				}
+			}
+		});
+		list.setModel(new AbstractListModel<String>() {
+		    String[] values = new String[] { "", "產品庫存體現圖", "客戶比較" };
 
-		/***********************************
-		 * ↓按鈕大魔王↓
-		 ************************************/
+		    public int getSize() {
+		        return values.length;
+		    }
+
+		    public String getElementAt(int index) {
+		        return values[index];
+		    }
+		});
+		list.setFont(new Font("微軟正黑體", Font.BOLD, 14));
+		scrollPane_3.setViewportView(list);
+		
+		JLabel lblNewLabel_4 = new JLabel("圖表");
+		lblNewLabel_4.setFont(new Font("微軟正黑體", Font.BOLD, 14));
+		lblNewLabel_4.setBounds(10, 9, 173, 43);
+		chart.add(lblNewLabel_4);
+
+		/***********************************↓按鈕大魔王↓************************************/
 
 		JButton searchMember = new JButton("查詢會員");
 		searchMember.addMouseListener(new MouseAdapter() {
@@ -735,11 +808,11 @@ public class StaffSystem extends JFrame {
 		memberDeleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int selectedRow=staffOutput.getSelectedRow();
+				int selectedRow=memberOutput.getSelectedRow();
 				if (selectedRow != -1) {
 	            	Member pro=memberList.get(selectedRow);
 	            	new MemberServiceImpl().delete(pro);
-	            	((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged(); // 更新 JTable
+	            	((AbstractTableModel) memberOutput.getModel()).fireTableDataChanged(); // 更新 JTable
 	                JOptionPane.showMessageDialog(null, "刪除完成！");
 				} else {
 	                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
@@ -805,11 +878,11 @@ public class StaffSystem extends JFrame {
 		freeCustDeleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int selectedRow=staffOutput.getSelectedRow();
+				int selectedRow=memberOutput.getSelectedRow();
 				if (selectedRow != -1) {
 	            	Member pro=memberList.get(selectedRow);
 	            	new MemberServiceImpl().delete(pro);
-	            	((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged(); // 更新 JTable
+	            	((AbstractTableModel) memberOutput.getModel()).fireTableDataChanged(); // 更新 JTable
 	                JOptionPane.showMessageDialog(null, "刪除完成！");
 				} else {
 	                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
@@ -1188,6 +1261,23 @@ public class StaffSystem extends JFrame {
 		printButton.setFont(new Font("微軟正黑體", Font.BOLD, 15));
 		printButton.setBounds(191, 410, 110, 39);
 		print.add(printButton);
+		
+		JButton btnNewButton = new JButton("顯示圖表");
+		btnNewButton.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				Member mem=(Member)FileTool.readFiled("memberMemry.txt");
+				mem=new Member();
+				FileTool.saveFiled(mem, "memberMemry.txt");
+				Shop frame = new Shop();
+				frame.setVisible(true);
+				dispose();
+			}
+		});
+		btnNewButton.setFont(new Font("微軟正黑體", Font.BOLD, 14));
+		btnNewButton.setBounds(287, 352, 121, 49);
+		chart.add(btnNewButton);
+		
 
 		JButton loginOutButton = new JButton("登出");
 		loginOutButton.addMouseListener(new MouseAdapter() {

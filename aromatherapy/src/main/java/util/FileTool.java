@@ -21,10 +21,12 @@ import java.util.List;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
+import javax.swing.JTextArea;
 import javax.swing.filechooser.FileNameExtensionFilter;
 
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.DataFormatter;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.usermodel.Sheet;
 import org.apache.poi.ss.usermodel.Workbook;
@@ -101,6 +103,20 @@ public class FileTool {
 		return object;
 	}
 	
+	public static String[] getAvailable() {
+        File folder = new File("reporter"); 
+        File[] files = folder.listFiles((dir, name) -> name.endsWith(".txt")|| name.endsWith(".xls"));
+        if (files == null) {
+            return new String[0]; // 或丟出例外、寫入 log
+        }
+        // 取得檔案名稱並轉換為字符串陣列
+        String[] reportNames = new String[files.length];
+        for (int i = 0; i < files.length; i++) {
+            reportNames[i] = files[i].getName(); // 只取得檔案名稱
+        }
+        return reportNames;
+    }
+	
 	/**報表尋找*/
 	 public static String[] getAvailableTxt() {
 	        File folder = new File("reporter"); 
@@ -133,7 +149,8 @@ public class FileTool {
 	 
 
 	 /**txt選擇**/
-	 public static void chooseAndPrintTxt() throws Exception {
+	 @SuppressWarnings("unused")
+	public static void chooseAndPrintTxt(JTextArea areaName){
 		    JFileChooser fileChooser = new JFileChooser();
 		    fileChooser.setDialogTitle("選擇 TXT 檔案");
 		    fileChooser.setFileFilter(new FileNameExtensionFilter("文字檔案 (*.txt)", "txt"));
@@ -141,20 +158,27 @@ public class FileTool {
 		    int result = fileChooser.showOpenDialog(null);
 		    if (result == JFileChooser.APPROVE_OPTION) {
 		        File selectedFile = fileChooser.getSelectedFile();
-		        String content = new String(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
-		        boolean confirmed = FileTool.previewReport(selectedFile.getAbsolutePath());
-		        if (confirmed) {
-		        	FileTool.printText(content);
-		        } else {
-		            JOptionPane.showMessageDialog(null, "使用者取消列印。");
-		        }
+		        String content;
+				try {
+					content = new String(java.nio.file.Files.readAllBytes(selectedFile.toPath()));
+					FileTool.previewReport(areaName,selectedFile.getAbsolutePath());
+			        if (selectedFile!=null) {
+			        	FileTool.printText(content);
+			        } else {
+			            JOptionPane.showMessageDialog(null, "使用者取消列印。");
+			        }
+				} catch (IOException e) {
+					e.printStackTrace();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 		    } else {
 		        JOptionPane.showMessageDialog(null, "未選取任何 TXT 檔案。");
 		    }
 		}
 
 	 /**xls選擇**/	 
-	 public static void chooseAndPrintReport() throws Exception {
+	 public static void chooseAndPrintReport(JTextArea areaName) {
 		    String[] reports = FileTool.getAvailableExcel();
 
 		    if (reports.length == 0) {
@@ -183,74 +207,83 @@ public class FileTool {
 		        JOptionPane.showMessageDialog(null, "檔案不存在：" + file.getAbsolutePath());
 		        return;
 		    }
-
-		    if (!previewReport(file.getAbsolutePath())) {
-		        JOptionPane.showMessageDialog(null, "使用者取消列印。");
-		        return;
-		    }
-
-		    FileTool.printExcelAsTable(file.getAbsolutePath());
+		    try {
+				previewReport(areaName,file.toString());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}		       
+		    try {
+				FileTool.printExcelAsTable(file.getAbsolutePath());
+			} catch (Exception e) {
+		        JOptionPane.showMessageDialog(null, "列印未完成。");
+				e.printStackTrace();
+			}
 		}
 
 	
 	/**列印前先顯示是否確認**/
-	public static boolean previewReport(String filePath) throws Exception {
-	    File file = new File(filePath);
-	    if (filePath.endsWith(".txt")) {
-	        String content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
-	        int res = JOptionPane.showConfirmDialog(null, content, "預覽文字報表", JOptionPane.OK_CANCEL_OPTION);
-	        return res == JOptionPane.OK_OPTION;
-	    } else if (filePath.endsWith(".xls")) {
-	        FileInputStream fis = new FileInputStream(file);
-	        @SuppressWarnings("resource")
-			Workbook workbook = new HSSFWorkbook(fis);
-	        Sheet sheet = workbook.getSheetAt(0);
-	        StringBuilder previewBuilder = new StringBuilder();
+	 public static void previewReport(JTextArea areaName, String filePath){
+		    File file = new File(filePath);
+		    if (filePath.endsWith(".txt")) {
+		        String content;
+				try {
+					content = new String(java.nio.file.Files.readAllBytes(file.toPath()));
+			        areaName.setText(content);
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+		    } else if (filePath.endsWith(".xls")) {
+		        try (FileInputStream fis = new FileInputStream(file);
+		             Workbook workbook = new HSSFWorkbook(fis)) {
 
-	        int minRow = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE;
-	        int minCol = Integer.MAX_VALUE, maxCol = Integer.MIN_VALUE;
+		            Sheet sheet = workbook.getSheetAt(0);
+		            StringBuilder previewBuilder = new StringBuilder();
+		            DataFormatter formatter = new DataFormatter();
 
-	        for (int r = 0; r <= sheet.getLastRowNum(); r++) {
-	            Row row = sheet.getRow(r);
-	            if (row == null) continue;
-	            for (int c = 0; c < row.getLastCellNum(); c++) {
-	                Cell cell = row.getCell(c);
-	                if (cell != null && !cell.toString().trim().isEmpty()) {
-	                    minRow = Math.min(minRow, r);
-	                    maxRow = Math.max(maxRow, r);
-	                    minCol = Math.min(minCol, c);
-	                    maxCol = Math.max(maxCol, c);
-	                }
-	            }
-	        }
-	        if (minRow == Integer.MAX_VALUE) {
-	            JOptionPane.showMessageDialog(null, "報表中無資料可預覽");
-	            return false;
-	        }
+		            int minRow = Integer.MAX_VALUE, maxRow = Integer.MIN_VALUE;
+		            int minCol = Integer.MAX_VALUE, maxCol = Integer.MIN_VALUE;
 
-	        for (int r = minRow; r <= maxRow; r++) {
-	            Row row = sheet.getRow(r);
-	            if (row == null) {
-	                previewBuilder.append("\n");
-	                continue;
-	            }
-	            for (int c = minCol; c <= maxCol; c++) {
-	                Cell cell = row.getCell(c);
-	                String val = (cell == null) ? "" : cell.toString();
-	                previewBuilder.append(val).append("\t");
-	            }
-	            previewBuilder.append("\n");
-	        }
+		            for (int r = 0; r <= sheet.getLastRowNum(); r++) {
+		                Row row = sheet.getRow(r);
+		                if (row == null) continue;
+		                for (int c = 0; c < row.getLastCellNum(); c++) {
+		                    Cell cell = row.getCell(c);
+		                    if (cell != null && !formatter.formatCellValue(cell).trim().isEmpty()) {
+		                        minRow = Math.min(minRow, r);
+		                        maxRow = Math.max(maxRow, r);
+		                        minCol = Math.min(minCol, c);
+		                        maxCol = Math.max(maxCol, c);
+		                    }
+		                }
+		            }
 
-	        fis.close();
+		            if (minRow == Integer.MAX_VALUE) {
+		                areaName.setText("報表中無資料可預覽");
+		                return;
+		            }
 
-	        int res = JOptionPane.showConfirmDialog(null, previewBuilder.toString(), "預覽Excel報表", JOptionPane.OK_CANCEL_OPTION);
-	        return res == JOptionPane.OK_OPTION;
-	    } else {
-	        JOptionPane.showMessageDialog(null, "不支援的預覽格式");
-	        return false;
-	    }
-	}
+		            for (int r = minRow; r <= maxRow; r++) {
+		                Row row = sheet.getRow(r);
+		                if (row == null) {
+		                    previewBuilder.append("\n");
+		                    continue;
+		                }
+		                for (int c = minCol; c <= maxCol; c++) {
+		                    Cell cell = row.getCell(c);
+		                    String val = (cell == null) ? "" : formatter.formatCellValue(cell);
+		                    previewBuilder.append(val).append("\t");
+		                }
+		                previewBuilder.append("\n");
+		            }
+
+		            areaName.setText(previewBuilder.toString());
+		        } catch (IOException e) {
+					e.printStackTrace();
+				}
+		    } else {
+		        areaName.setText("不支援的預覽格式");
+		    }
+	 }
 	
 	
 	/**txt的列印範圍設定*/

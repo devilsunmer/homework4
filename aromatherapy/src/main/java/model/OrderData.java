@@ -13,7 +13,7 @@ public class OrderData implements Serializable{
 	private static final long serialVersionUID = 1L;
 	OrderAll orderall;
 	List<OrderItem> items;
-	Member memberpo;
+	Member member;
 	public OrderData() {
 		super();
 	}
@@ -21,6 +21,11 @@ public class OrderData implements Serializable{
 		super();
 		this.orderall = orderall;
 		this.items = items;
+		if (this.orderall.memberNumber != null) {
+            this.member = new MemberServiceImpl().userSomeView(this.orderall.memberNumber);
+        } else {
+            this.member = new Member(); // 或 null，但使用時需檢查
+        }
 	}
 	public OrderAll getOrderall() {
 		return orderall;
@@ -34,8 +39,6 @@ public class OrderData implements Serializable{
 	public void setItems(List<OrderItem> items) {
 		this.items = items;
 	}
-	
-	Member member=new MemberServiceImpl().userSomeView(orderall.memberNumber);
 	
 	public String getOrderNumber() { return orderall.getOrderNumber(); }
     public String getMemberName() { return member.memberName; }
@@ -61,11 +64,11 @@ public class OrderData implements Serializable{
     }
 
     public Double getOrderSum() { return orderall.getOrderSum(); }
-	public void setMember(Member memberpo) {
-		this.memberpo = memberpo;		
+	public void setMember(Member member) {
+		this.member = member;		
 	}
 	public Member getMember() {
-		return memberpo;
+		return member;
 	}
 	
 

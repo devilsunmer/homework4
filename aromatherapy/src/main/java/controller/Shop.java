@@ -817,11 +817,19 @@ public class Shop extends JFrame {
 		saveFileButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				OrderTool.custOrderCheck(orderView, member);
-				int rowCount = model.getRowCount();
-				OrderTool.backupOrderIfCancelled(rowCount, productView,member.getMemberNumber());
-				chooselist.setSelectedItem(1);
-				count.setValue(0);
+				if(member!=null)
+				{
+					OrderTool.custOrderCheck(orderView, member);
+					int rowCount = model.getRowCount();
+					if(rowCount>0)
+					{
+						OrderTool.backupOrderIfCancelled(rowCount, productView,member.getMemberNumber());
+						chooselist.setSelectedItem(1);
+						count.setValue(0);
+					}
+				}else {
+					
+				}
 			}
 		});
 		saveFileButton.setFont(new Font("微軟正黑體", Font.BOLD, 16));
@@ -832,7 +840,7 @@ public class Shop extends JFrame {
 		cansleButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				orderView.getColumn(e);
+				model.setRowCount(0);
 			}
 		});
 		cansleButton.setFont(new Font("微軟正黑體", Font.BOLD, 16));
@@ -843,9 +851,9 @@ public class Shop extends JFrame {
 		deleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int selectedRow = orderView.getSelectedRow(); // 取得選取列索引
+				int selectedRow = orderView.getSelectedRow(); 
 	            if (selectedRow != -1) {
-	                model.removeRow(selectedRow); // 移除選取列
+	                model.removeRow(selectedRow); 
 	            } else {
 	                JOptionPane.showMessageDialog(null, "請先選取一列要刪除的資料！");
 	            }

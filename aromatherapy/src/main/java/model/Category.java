@@ -31,8 +31,8 @@ public enum Category {
 			Category[] categories = Category.values();
 		    String[] result = new String[categories.length+1];
 		    result[0]="";
-		    for (int i = 1; i < (categories.length+1); i++) {
-		        result[i] = categories[i].getChineseName();
+		    for (int i = 0; i < categories.length; i++) {
+		        result[i+1] = categories[i].getChineseName();
 		    }
 
 		    return result;
