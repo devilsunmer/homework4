@@ -86,6 +86,11 @@ public class ProductStockServiceImpl implements ProductStockService {
 	}
 	
 	@Override
+	public ProductStock takeProductStock(String number) {
+		return productStockDaoImpl.check(number);
+	}
+	
+	@Override
 	public List<ProductStock> allProductStock() {
 		List<ProductStock> pslist = productStockDaoImpl.all();
 	    Map<String, ProductStock> stockMap = new HashMap<>();

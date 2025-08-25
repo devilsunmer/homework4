@@ -5,6 +5,8 @@ import java.awt.EventQueue;
 import java.awt.Font;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.sql.Date;
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,12 +35,14 @@ import model.OrderAll;
 import model.OrderData;
 import model.OrderItem;
 import model.Product;
+import model.ProductStock;
 import model.ProductSystemView;
 import model.Staff;
 import service.impl.MemberServiceImpl;
 import service.impl.OrderAllServiceImpl;
 import service.impl.OrderItemServiceImpl;
 import service.impl.ProductServiceImpl;
+import service.impl.ProductStockServiceImpl;
 import service.impl.StaffServiceImpl;
 import util.ButtonTool;
 import util.FileTool;
@@ -568,6 +572,7 @@ public class StaffSystem extends JFrame {
 		productStock.add(lblNewLabel_2_4_2_1_1_1);
 
 		nameForStock = new JComboBox<>(new ProductServiceImpl().productName().toArray(new String[0]));
+		nameForStock.setFont(new Font("微軟正黑體", Font.BOLD, 14));
 		nameForStock.setBounds(101, 387, 80, 31);
 		productStock.add(nameForStock);
 
@@ -1029,8 +1034,7 @@ public class StaffSystem extends JFrame {
 				catergoryField.setSelectedIndex(0);
 				productOverviewField.setText("");
 				productCostField.setValue("0");
-				productPriceField.setValue("0");
-				
+				productPriceField.setValue("0");	
 			}
 		});
 		clearProductNewButton.setFont(new Font("微軟正黑體", Font.BOLD, 15));
@@ -1093,11 +1097,25 @@ public class StaffSystem extends JFrame {
 		deleteProductNumberButton.setBounds(343, 342, 98, 39);
 		productRead.add(deleteProductNumberButton);
 
+		LocalDate today = LocalDate.now();
+		Date date = java.sql.Date.valueOf(today);
+		
 		JButton searchProductNumberButton_1 = new JButton("確認進貨");
 		searchProductNumberButton_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				String name=nameForStock.getSelectedItem().toString();
+				Integer in=(Integer)spinner.getValue();
+				if(in!=0)
+				{
+					String number=new ProductServiceImpl().takeProductNumber(name);
+					ProductStock pp=new ProductStockServiceImpl().takeProductStock(number);
+					pp.setProductInStock(in);
+					pp.setProductStockDate(date);
+					new ProductStockServiceImpl().addProductStock(pp);
+					JOptionPane.showMessageDialog(null, "確認進貨");
+				}
+				JOptionPane.showMessageDialog(null, "");
 			}
 		});
 		searchProductNumberButton_1.setFont(new Font("微軟正黑體", Font.BOLD, 15));
@@ -1108,7 +1126,18 @@ public class StaffSystem extends JFrame {
 		searchProductNumberButton_1_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				String name=nameForStock.getSelectedItem().toString();
+				Integer out=(Integer)spinner_1.getValue();
+				if(out!=0)
+				{
+					String number=new ProductServiceImpl().takeProductNumber(name);
+					ProductStock pp=new ProductStockServiceImpl().takeProductStock(number);
+					pp.setProductOutStock(out);
+					pp.setProductStockDate(date);
+					new ProductStockServiceImpl().addProductStock(pp);
+					JOptionPane.showMessageDialog(null, "確認出貨");
+				}
+				JOptionPane.showMessageDialog(null, "");
 			}
 		});
 		searchProductNumberButton_1_1.setFont(new Font("微軟正黑體", Font.BOLD, 15));
@@ -1119,7 +1148,10 @@ public class StaffSystem extends JFrame {
 		saveExcelButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				String excelname=excelFieldNameField.getText();
+				String sheetname=excelSheetNameField.getText();
+				String choose=excellist.getSelectedValue().toString();
+				ReporterTool.exportReport(choose, excelname, sheetname);
 			}
 		});
 		saveExcelButton.setFont(new Font("微軟正黑體", Font.BOLD, 15));
@@ -1130,7 +1162,16 @@ public class StaffSystem extends JFrame {
 		saveTxtButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-
+				String name=txtlist.getSelectedValue();
+				String userUse=txtNameField.getText();
+				if(userUse==null)
+				{
+				String path=ReporterTool.chooseSaveLocation(name);
+				viewTxtOutput.setText(path);
+				}else {
+					String path2=ReporterTool.chooseSaveLocation(userUse);
+					viewTxtOutput.setText(path2);
+				}
 			}
 		});
 		saveTxtButton.setFont(new Font("微軟正黑體", Font.BOLD, 15));

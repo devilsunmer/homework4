@@ -106,6 +106,13 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
+	public String getMemberName(String memberNumber) {
+		Member	member = memberDaoImpl.idView(memberNumber);
+		String name=member.getMemberName();
+		return name;
+	}
+	
+	@Override
 	public Boolean checkUsername(String username) {
 		return memberDaoImpl.checkUsername(username);
 	}

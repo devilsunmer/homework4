@@ -24,6 +24,7 @@ public interface ProductStockService {
 
 		// delete
 		public Boolean deleteProductStock(String productNumber);
+		ProductStock takeProductStock(String number);
 
 
 }

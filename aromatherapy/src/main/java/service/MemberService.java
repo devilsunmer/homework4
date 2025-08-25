@@ -31,4 +31,5 @@ public interface MemberService {
 		//delete
 		public Boolean delete(Member member);
 		List<Member> userView(String username);
+		String getMemberName(String memberNumber);
 }
