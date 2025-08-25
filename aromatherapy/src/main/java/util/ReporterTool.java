@@ -1,6 +1,7 @@
 package util;
 
 import java.awt.Dimension;
+import java.awt.Font;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
@@ -22,6 +23,7 @@ import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.DefaultCategoryDataset;
 
 import dao.impl.ProductSystemViewDaoImpl;
@@ -336,13 +338,32 @@ public class ReporterTool {
                 "產品庫存進出圖",    // 標題
                 "產品名稱",       // X軸標籤
                 "數量",           // Y軸標籤
-                dataset);
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,            // 顯示圖例
+                true,
+                false);
+     // 設定圖表標題字體
+        barChart.getTitle().setFont(new Font("微軟正黑體", Font.BOLD, 20));
+        // 設定 X 軸標籤字體
+        barChart.getCategoryPlot().getDomainAxis().setTickLabelFont(new Font("微軟正黑體", Font.PLAIN, 14));
+        // 設定 Y 軸標籤字體
+        barChart.getCategoryPlot().getRangeAxis().setTickLabelFont(new Font("微軟正黑體", Font.PLAIN, 14));
+        // 設定 X 軸標題字體
+        barChart.getCategoryPlot().getDomainAxis().setLabelFont(new Font("微軟正黑體", Font.BOLD, 16));
+        // 設定 Y 軸標題字體
+        barChart.getCategoryPlot().getRangeAxis().setLabelFont(new Font("微軟正黑體", Font.BOLD, 16));
+        // 設定圖例字體
+        if (barChart.getLegend() != null) {
+        	barChart.getLegend().setItemFont(new Font("微軟正黑體", Font.PLAIN, 14));
+        }
+
 
         // 建立顯示圖表的面板
         ChartPanel chartPanel = new ChartPanel(barChart);
         Dimension size = panel.getSize();
         chartPanel.setPreferredSize(size);
-
+        
         return chartPanel;
     }
 	
@@ -370,7 +391,25 @@ public class ReporterTool {
                 "客戶比較圖",    // 標題
                 "會員／非會員",       // X軸標籤
                 "數量",           // Y軸標籤
-                dataset);
+                dataset,
+                PlotOrientation.VERTICAL,
+                true,            // 顯示圖例
+                true,
+                false);
+     // 設定圖表標題字體
+        barChart.getTitle().setFont(new Font("微軟正黑體", Font.BOLD, 20));
+        // 設定 X 軸標籤字體
+        barChart.getCategoryPlot().getDomainAxis().setTickLabelFont(new Font("微軟正黑體", Font.PLAIN, 14));
+        // 設定 Y 軸標籤字體
+        barChart.getCategoryPlot().getRangeAxis().setTickLabelFont(new Font("微軟正黑體", Font.PLAIN, 14));
+        // 設定 X 軸標題字體
+        barChart.getCategoryPlot().getDomainAxis().setLabelFont(new Font("微軟正黑體", Font.BOLD, 16));
+        // 設定 Y 軸標題字體
+        barChart.getCategoryPlot().getRangeAxis().setLabelFont(new Font("微軟正黑體", Font.BOLD, 16));
+        // 設定圖例字體
+        if (barChart.getLegend() != null) {
+        	barChart.getLegend().setItemFont(new Font("微軟正黑體", Font.PLAIN, 14));
+        }
 
         // 建立顯示圖表的面板
         ChartPanel chartPanel = new ChartPanel(barChart);

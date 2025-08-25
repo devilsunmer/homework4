@@ -52,6 +52,7 @@ import util.FileTool;
 import util.ReporterTool;
 import util.SystemTool;
 import javax.swing.AbstractListModel;
+import java.awt.BorderLayout;
 
 public class StaffSystem extends JFrame {
 
@@ -718,7 +719,8 @@ public class StaffSystem extends JFrame {
 		
 		JPanel panel = new JPanel();
 		panel.setBounds(24, 62, 425, 218);
-		chart.add(panel);
+		chart.add(panel,BorderLayout.CENTER);
+		panel.setLayout(new BorderLayout(0, 0));
 		
 		JScrollPane scrollPane_3 = new JScrollPane();
 		scrollPane_3.setBounds(62, 316, 137, 113);
