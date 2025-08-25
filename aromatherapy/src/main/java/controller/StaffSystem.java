@@ -106,7 +106,7 @@ public class StaffSystem extends JFrame {
 	@SuppressWarnings("serial")
 	public StaffSystem() {
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		setBounds(200, 100, 600, 600);
+		setBounds(450, 100, 600, 600);
 		contentPane = new JPanel();
 		contentPane.setBackground(new Color(85, 108, 128));
 		contentPane.setBorder(new EmptyBorder(5, 5, 5, 5));
@@ -176,6 +176,7 @@ public class StaffSystem extends JFrame {
 		memberRead.add(memberOutput);
 		Font tableFont = new Font("微軟正黑體", Font.BOLD, 14);
 		memberOutput.setFont(tableFont);
+		SystemTool.tableSet(memberOutput);
 
 		JScrollPane scrollPane = new JScrollPane(memberOutput);
 		scrollPane.setBounds(10, 40, 463, 284);
@@ -226,6 +227,8 @@ public class StaffSystem extends JFrame {
 		freeCustOutput = SystemTool.setForObject(objectFreeList, member);
 		freeCustOutput.setBounds(10, 51, 463, 267);
 		freeMember.add(freeCustOutput);
+		freeCustOutput.setFont(tableFont);
+		SystemTool.tableSet(freeCustOutput);
 
 		JScrollPane scrollPaneoo = new JScrollPane(freeCustOutput);
 		scrollPaneoo.setBounds(10, 40, 463, 284);
@@ -621,11 +624,13 @@ public class StaffSystem extends JFrame {
 
 		excelFieldNameField = new JTextField();
 		excelFieldNameField.setColumns(10);
+		excelFieldNameField.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		excelFieldNameField.setBounds(165, 345, 80, 31);
 		excel.add(excelFieldNameField);
 
 		excelSheetNameField = new JTextField();
 		excelSheetNameField.setColumns(10);
+		excelSheetNameField.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		excelSheetNameField.setBounds(165, 394, 80, 31);
 		excel.add(excelSheetNameField);
 
@@ -654,6 +659,7 @@ public class StaffSystem extends JFrame {
 
 		txtNameField = new JTextField();
 		txtNameField.setColumns(10);
+		txtNameField.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		txtNameField.setBounds(162, 388, 80, 31);
 		word.add(txtNameField);
 
@@ -675,6 +681,7 @@ public class StaffSystem extends JFrame {
 			}
 		});
 		scrollPane_1.setViewportView(txtlist);
+		txtlist.setFont(tableFont);
 
 		JPanel print = new JPanel();
 		overviewManage.addTab("列印", null, print, null);
@@ -795,6 +802,7 @@ public class StaffSystem extends JFrame {
 					for (Member OD : memberList) {
 						new MemberServiceImpl().update(OD);
 					}
+					((AbstractTableModel) memberOutput.getModel()).fireTableDataChanged();
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -865,6 +873,7 @@ public class StaffSystem extends JFrame {
 					for (Member od : memberList) {
 						new MemberServiceImpl().update(od);
 					}
+					((AbstractTableModel) freeCustOutput.getModel()).fireTableDataChanged();
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -880,11 +889,11 @@ public class StaffSystem extends JFrame {
 		freeCustDeleteButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				int selectedRow=memberOutput.getSelectedRow();
+				int selectedRow=freeCustOutput.getSelectedRow();
 				if (selectedRow != -1) {
 	            	Member pro=memberList.get(selectedRow);
 	            	new MemberServiceImpl().delete(pro);
-	            	((AbstractTableModel) memberOutput.getModel()).fireTableDataChanged(); // 更新 JTable
+	            	((AbstractTableModel) freeCustOutput.getModel()).fireTableDataChanged(); // 更新 JTable
 	                JOptionPane.showMessageDialog(null, "刪除完成！");
 				} else {
 	                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
@@ -922,6 +931,7 @@ public class StaffSystem extends JFrame {
 					for (Staff op : staffList) {
 						new StaffServiceImpl().updateAll(op);
 					}
+					((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged();
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -969,6 +979,7 @@ public class StaffSystem extends JFrame {
 					staffPasswordField.setText("");
 					staffPhoneField.setText("");
 	                JOptionPane.showMessageDialog(null, "新增員工完成！");
+	                ((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged();
 				}else {
 	                JOptionPane.showMessageDialog(null, "資料必須填寫");
 
@@ -1027,6 +1038,7 @@ public class StaffSystem extends JFrame {
 							new OrderItemServiceImpl().update(item);
 						}
 					}
+					((AbstractTableModel) orderOutput.getModel()).fireTableDataChanged();
 					JOptionPane.showMessageDialog(null, "資料已成功同步至資料庫！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -1069,6 +1081,7 @@ public class StaffSystem extends JFrame {
 						orderAll = od.getOrderall();
 						new OrderAllServiceImpl().deleteOrder(orderAll.getOrderNumber());
 					}
+					((AbstractTableModel) orderOutput.getModel()).fireTableDataChanged();
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -1097,6 +1110,7 @@ public class StaffSystem extends JFrame {
 					productOverviewField.setText("");
 					productCostField.setValue(0);
 					productPriceField.setValue(0);	
+					((AbstractTableModel) productOutput.getModel()).fireTableDataChanged();
 				}else {
 					JOptionPane.showMessageDialog(null, "新增產品失敗，請確認是否有未填寫的地方");					
 				}
@@ -1148,6 +1162,7 @@ public class StaffSystem extends JFrame {
 					for (Product od : productList) {
 						new ProductServiceImpl().productUpdate(od);
 					}
+					((AbstractTableModel) productOutput.getModel()).fireTableDataChanged();
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -1195,6 +1210,8 @@ public class StaffSystem extends JFrame {
 					new ProductStockServiceImpl().addProductStock(pp);
 					JOptionPane.showMessageDialog(null, "確認進貨");
 					spinner.setValue(0);
+					nameForStock.setSelectedIndex(0);
+					((AbstractTableModel) table.getModel()).fireTableDataChanged();
 				}
 				JOptionPane.showMessageDialog(null, "");
 			}
@@ -1218,6 +1235,8 @@ public class StaffSystem extends JFrame {
 					new ProductStockServiceImpl().addProductStock(pp);
 					JOptionPane.showMessageDialog(null, "確認出貨");
 					spinner_1.setValue(0);
+					nameForStock.setSelectedIndex(0);
+					((AbstractTableModel) table.getModel()).fireTableDataChanged();
 				}
 				JOptionPane.showMessageDialog(null, "");
 			}

@@ -4,11 +4,14 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.sql.Date;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 
 import javax.swing.JOptionPane;
 import javax.swing.JTable;
 import javax.swing.table.AbstractTableModel;
+import javax.swing.table.TableModel;
+import javax.swing.table.TableRowSorter;
 
 import model.Member;
 import model.OrderAll;
@@ -309,6 +312,25 @@ public class SystemTool {
 				fireTableRowsUpdated(rowIndex, rowIndex);
 			}
 		});
+	}
+	
+	public static void tableSet(JTable table) {
+		TableRowSorter<TableModel> sorter = new TableRowSorter<>(table.getModel());
+		table.setRowSorter(sorter);
+
+		// 假設「會員編號」是第 0 欄（你要排序的欄位）
+		sorter.setComparator(0, new Comparator<String>() {
+		    @Override
+		    public int compare(String s1, String s2) {
+		        return extractSortableValue(s1).compareTo(extractSortableValue(s2));
+		    }
+
+		    private String extractSortableValue(String input) {
+		        // 把 m001-1 變成 m001.1，方便排序
+		        return input.replace("-", ".");
+		    }
+		});
+
 	}
 
 	public static List<OrderData> releaseSpaceForOrderData() {
