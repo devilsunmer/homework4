@@ -23,3 +23,6 @@
 每一次呼吸的香氣，都是對生活的療癒回應。從選擇產品到完成訂單，我們的介面陪你溫柔而準確地走好每一步。
 
 <img width="703" height="260" alt="image" src="https://github.com/user-attachments/assets/2077265a-3157-4a87-91b5-94646b61f341" />
+
+接下來是我的設計初始化流程：
+<img alt="image" src="work4網頁示意圖.png">
