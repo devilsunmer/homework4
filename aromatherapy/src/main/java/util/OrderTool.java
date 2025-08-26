@@ -1,15 +1,24 @@
 package util;
 
-import java.io.File;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.GridLayout;
 import java.sql.Date;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JFileChooser;
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
+import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.JTextArea;
+import javax.swing.JTextField;
+import javax.swing.ListSelectionModel;
 import javax.swing.table.DefaultTableModel;
 
 import model.Member;
@@ -96,6 +105,126 @@ public class OrderTool {
 		return subtotal;
 	}
 	
+	public static void orderCheckUse(String memberNumber,JTable orderView) {
+		List<Member> contactList=new MemberServiceImpl().idAllView(memberNumber);
+	    String name = "", address = "", phone = "";
+
+	    Member selectedMember = null;
+
+	    if (contactList != null && !contactList.isEmpty()) {
+	        if (contactList.size() == 1) {
+	            Member only = contactList.get(0);
+	            int choice = JOptionPane.showConfirmDialog(
+	                null,
+	                String.format("是否使用這筆聯絡資料？\n\n姓名：%s\n地址：%s\n電話：%s",
+	                        only.getMemberName(), only.getMemberAddress(), only.getMemberPhone()),
+	                "使用舊資料？",
+	                JOptionPane.YES_NO_OPTION
+	            );
+	            if (choice == JOptionPane.YES_OPTION) {
+	                selectedMember = only;
+	            }
+	        } else {
+	            // 多筆 → JList 選擇
+	            DefaultListModel<Member> listModel = new DefaultListModel<>();
+	            for (Member m : contactList) {
+	                listModel.addElement(m);
+	            }
+
+	            JList<Member> memberJList = new JList<>(listModel);
+	            memberJList.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+	            memberJList.setCellRenderer(new DefaultListCellRenderer() {
+	                @Override
+	                public Component getListCellRendererComponent(JList<?> list, Object value, int index,
+	                                                              boolean isSelected, boolean cellHasFocus) {
+	                    Member m = (Member) value;
+	                    String text = String.format("姓名：%s｜地址：%s｜電話：%s",
+	                            m.getMemberName(), m.getMemberAddress(), m.getMemberPhone());
+	                    return super.getListCellRendererComponent(list, text, index, isSelected, cellHasFocus);
+	                }
+	            });
+
+	            JScrollPane scrollPane = new JScrollPane(memberJList);
+	            scrollPane.setPreferredSize(new Dimension(450, 200));
+
+	            int result = JOptionPane.showConfirmDialog(
+	                null,
+	                scrollPane,
+	                "請選擇要使用的聯絡資料",
+	                JOptionPane.OK_CANCEL_OPTION,
+	                JOptionPane.PLAIN_MESSAGE
+	            );
+
+	            if (result == JOptionPane.OK_OPTION) {
+	                selectedMember = memberJList.getSelectedValue();
+	                if (selectedMember == null) {
+	                    JOptionPane.showMessageDialog(null, "尚未選擇任何資料", "錯誤", JOptionPane.ERROR_MESSAGE);
+	                    return;
+	                }
+	            } else {
+	                return; // 使用者取消
+	            }
+	        }
+	    }
+
+	    // 若未選擇任何舊資料 → 請使用者輸入
+	    if (selectedMember == null) {
+	        JTextField nameField = new JTextField();
+	        JTextField addressField = new JTextField();
+	        JTextField phoneField = new JTextField();
+
+	        JPanel inputPanel = new JPanel(new GridLayout(0, 1));
+	        inputPanel.add(new JLabel("聯絡姓名："));
+	        inputPanel.add(nameField);
+	        inputPanel.add(new JLabel("寄送地址："));
+	        inputPanel.add(addressField);
+	        inputPanel.add(new JLabel("電話："));
+	        inputPanel.add(phoneField);
+
+	        int result = JOptionPane.showConfirmDialog(
+	            null,
+	            inputPanel,
+	            "請輸入聯絡資訊",
+	            JOptionPane.OK_CANCEL_OPTION,
+	            JOptionPane.PLAIN_MESSAGE
+	        );
+
+	        if (result == JOptionPane.OK_OPTION) {
+	            name = nameField.getText();
+	            address = addressField.getText();
+	            phone = phoneField.getText();
+
+	            // 新增一筆新聯絡人資料（可選擇加入原本 List）
+	            Member newContact = new Member();
+	            newContact.setMemberName(name);
+	            newContact.setMemberAddress(address);
+	            newContact.setMemberPhone(phone);
+
+	            new MemberServiceImpl().addAddressAndPhone(memberNumber, name, address, phone);
+
+	            selectedMember = newContact;
+
+	        } else {
+	            JOptionPane.showMessageDialog(null, "訂單輸入已取消", "取消", JOptionPane.WARNING_MESSAGE);
+	            return;
+	        }
+
+			OrderData orderdata=OrderTool.packOrder(selectedMember, orderView);
+			OrderTool.processOrder(orderView, selectedMember, orderdata);
+	    }
+
+	    // ✅ 顯示確認聯絡資訊
+	    String contactInfo = String.format(
+	        "聯絡人：%s\n寄送地址：%s\n電話：%s",
+	        selectedMember.getMemberName(),
+	        selectedMember.getMemberAddress(),
+	        selectedMember.getMemberPhone()
+	    );
+
+	    JOptionPane.showMessageDialog(null, contactInfo, "已選擇聯絡資料", JOptionPane.INFORMATION_MESSAGE);
+	}
+
+		
 	/**結算訂單**/
 	public static List<String> custOrderCheck(JTable orderView,Member member) {
 		List<String> cust = new ArrayList<>();

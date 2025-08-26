@@ -1,5 +1,3 @@
-CREATE DATABASE  IF NOT EXISTS `aromatherapy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
-USE `aromatherapy`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: aromatherapy
@@ -41,7 +39,7 @@ CREATE TABLE `member` (
 
 LOCK TABLES `member` WRITE;
 /*!40000 ALTER TABLE `member` DISABLE KEYS */;
-INSERT INTO `member` VALUES ('m001','小可愛','test1','a123','taipei','0911111111',1),('m002','花甲','test2','re43','永和區','0999999999',0),('m003','大可愛','test3','me12','taipei','0911111110',0),('m004','小醜醜','test4','q34','路邊撿來的','0912121212',0),('m002-1','大可愛','','','新北市','0900000000',0),('m005','qwe','qw','','1','',1),('m006','qwe','qwe1','q123','qwe','0911111111',1);
+INSERT INTO `member` VALUES ('m001','小可愛','test1','a123','taipei','0911111111',1),('m002','花甲','test2','re43','永和區','0999999999',0),('m003','大可愛','test3','me12','taipei','0911111110',0),('m004','小醜醜','test4','q34','路邊撿來的','0912121212',0),('m002-1','大可愛','','','新北市','0900000000',0),('m005','qwe','qw','','1','',1),('m006','qwe','qwe1','q123','qwe','0911111111',1),('m007','hy','hy6','hy6','hy6','0912345678',1),('m008','小測試','user1','u123','789','0987654321',1),('m009','王大維','user1','u123','u123','0987654321',1);
 /*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -54,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-25 10:47:18
+-- Dump completed on 2025-08-26 10:42:41

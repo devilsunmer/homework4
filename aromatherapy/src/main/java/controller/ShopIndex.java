@@ -37,6 +37,7 @@ import javax.swing.table.DefaultTableModel;
 import model.Member;
 import model.OrderAll;
 import model.OrderData;
+import model.Product;
 import service.impl.MemberServiceImpl;
 import service.impl.ProductServiceImpl;
 import service.impl.StaffServiceImpl;
@@ -255,15 +256,38 @@ public class ShopIndex extends JFrame {
 		for (String o : productView) {
 			chooselist.addItem(o);
 		}
+		chooselist.addItemListener(new ItemListener() {
+			public void itemStateChanged(ItemEvent e) {
+				if (e.getStateChange() == ItemEvent.SELECTED) {
+		            String selectedItem = chooselist.getSelectedItem().toString();
+
+		            // 避免第一項「請選擇商品」觸發邏輯
+		            if (!selectedItem.equals("請選擇商品")) {
+		                ProductServiceImpl productService = new ProductServiceImpl();
+		                String productNumber = productService.takeProductNumber(selectedItem);
+		                Product product = productService.productNumber(productNumber);
+		                imdexMes.setText(product.getProdouctOverview());
+		            } else {
+		                imdexMes.setText(""); // 選擇預設空白時清空
+		            }
+				}
+			}
+		});
 		chooselist.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		chooselist.setBounds(123, 64, 151, 36);
 		shopIndex.add(chooselist);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(20, 10, 538, 43);
+		scrollPane_4.setOpaque(false);
+		scrollPane_4.getViewport().setOpaque(false);
+		scrollPane_4.setBorder(null);
+		shopIndex.add(scrollPane_4);
 
 		imdexMes = new JLabel();
+		scrollPane_4.setViewportView(imdexMes);
 		imdexMes.setFont(new Font("微軟正黑體", Font.BOLD, 18));
 		imdexMes.setHorizontalAlignment(SwingConstants.CENTER);
-		imdexMes.setBounds(148, 10, 290, 43);
-		shopIndex.add(imdexMes);
 		
 		JLabel lblNewLabel_4 = new JLabel("決定要購買：");
 		lblNewLabel_4.setFont(new Font("微軟正黑體", Font.BOLD, 16));
@@ -624,23 +648,25 @@ public class ShopIndex extends JFrame {
 
 		/************************************ ↓按鈕大魔王↓************************************/
 		
+		CardLayout cardLayoutForChange = (CardLayout) cardPanel.getLayout();
+		
 		JButton memberLoginButton = new JButton("會員登入");
 		memberLoginButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String user=usernameLoginField.getText();
 				String pass=ButtonTool.changePass(passwordLoginField);
-				if(ButtonTool.isUserPass(user)&&ButtonTool.isUserPass(pass))
+				if(new MemberServiceImpl().userLogin(user, pass))
 				{
 					member=new MemberServiceImpl().userView(user, pass);
 					if(member!=null) {
-					ButtonTool.saveMember(member);
-					CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-		            cardLayout.show(cardPanel, "shopIndex");
-					JOptionPane.showMessageDialog(null, "歡迎登入選購我們的產品！");
-			        ButtonTool.updateButtonText(ButtonTool.getCurrentCard(cardPanel), member!=null, loginButton, changeButton);
-					isLoggedIn=true;
-					changeButtonView();
+						JOptionPane.showMessageDialog(null, "歡迎登入選購我們的產品！");
+						ButtonTool.saveMember(member);
+				        ButtonTool.updateButtonText(ButtonTool.getCurrentCard(cardPanel), member!=null, loginButton, changeButton);
+						changeButtonView();
+						cardLayoutForChange.show(cardPanel, "shopIndex");
+						cardPanel.revalidate();
+						cardPanel.repaint();
 					}
 				}else {
 					JOptionPane.showMessageDialog(null, "請確認是否為會員！");
@@ -738,9 +764,9 @@ public class ShopIndex extends JFrame {
 			            	);
 	
 			            if (result == JOptionPane.YES_OPTION) {
-			            	
-			            	CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-			    			cardLayout.show(cardPanel, "shopIndex");
+			    			cardLayoutForChange.show(cardPanel, "shopIndex");
+			    			cardPanel.revalidate();
+			    			cardPanel.repaint();
 			           	}
 					}
 				}else {
@@ -799,15 +825,13 @@ public class ShopIndex extends JFrame {
 		orderEnterButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				if(isLoggedIn)
+				if(member!=null)
 				{
-					OrderData orderdata=OrderTool.packOrder(member, orderView);
-					OrderTool.processOrder(orderView, member, orderdata);
+					OrderTool.orderCheckUse(member.getMemberNumber(),orderView);
 				}else {
 					OrderData orderData=new OrderData();
 					FileTool.saveFiled(orderData, "custOrderNotyet.txt");
-					CardLayout cardLayout = (CardLayout) cardPanel.getLayout();
-					cardLayout.show(cardPanel, "forCustOrder");
+					cardLayoutForChange.show(cardPanel, "forCustOrder");
 					JOptionPane.showMessageDialog(null, "請先填寫寄送資料。");
 				}
 				

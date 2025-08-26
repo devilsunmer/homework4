@@ -418,6 +418,7 @@ public class StaffSystem extends JFrame {
 		productCreat.add(lblNewLabel_2_3_1_4);
 
 		productNameField = new JTextField();
+		productCostField.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		productNameField.setColumns(10);
 		productNameField.setBounds(227, 63, 112, 31);
 		productCreat.add(productNameField);
@@ -474,11 +475,14 @@ public class StaffSystem extends JFrame {
 		lblNewLabel_2_3_1_1_1_1.setFont(new Font("微軟正黑體", Font.BOLD, 16));
 		lblNewLabel_2_3_1_1_1_1.setBounds(95, 177, 123, 31);
 		productCreat.add(lblNewLabel_2_3_1_1_1_1);
+		
+		JScrollPane scrollPane_4 = new JScrollPane();
+		scrollPane_4.setBounds(227, 171, 232, 53);
+		productCreat.add(scrollPane_4);
 
 		JTextArea productOverviewField = new JTextArea();
+		scrollPane_4.setViewportView(productOverviewField);
 		productOverviewField.setFont(new Font("微軟正黑體", Font.BOLD, 14));
-		productOverviewField.setBounds(227, 171, 232, 53);
-		productCreat.add(productOverviewField);
 
 		JPanel productRead = new JPanel();
 		productManage.addTab("產品查詢", null, productRead, null);
@@ -669,17 +673,6 @@ public class StaffSystem extends JFrame {
 
 		JList<String> txtlist = new JList<>(FileTool.getAvailableTxt());
 		txtlist.setFont(new Font("微軟正黑體", Font.BOLD, 14));
-		txtlist.addListSelectionListener(new ListSelectionListener() {
-			public void valueChanged(ListSelectionEvent e) {
-				if (!e.getValueIsAdjusting()) {
-			        String selectedFileName = txtlist.getSelectedValue();
-			        if (selectedFileName != null) {
-			        	File file = new File("reporter/" + selectedFileName);
-			            FileTool.previewReport(viewTxtOutput, file.getAbsolutePath());
-			        }
-				}
-			}
-		});
 		scrollPane_1.setViewportView(txtlist);
 		txtlist.setFont(tableFont);
 
@@ -1279,10 +1272,11 @@ public class StaffSystem extends JFrame {
 		saveTxtButton.setBounds(306, 383, 110, 39);
 		word.add(saveTxtButton);
 
-		JButton printButton = new JButton("確認存檔");
+		JButton printButton = new JButton("確認列印");
 		printButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
+				ReporterTool.forPrint(viewPrintOutput, getWarningString(), getName());
 				
 			}
 		});
