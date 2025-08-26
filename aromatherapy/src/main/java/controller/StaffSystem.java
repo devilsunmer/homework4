@@ -383,6 +383,8 @@ public class StaffSystem extends JFrame {
 		orderOutput.setBounds(10, 40, 463, 284);
 		orderOutput.setFont(new Font("微軟正黑體", Font.BOLD, 14));
 		oderManager.add(orderOutput);
+		SystemTool.tableSet(orderOutput);
+
 
 		JScrollPane scrollPane3 = new JScrollPane(orderOutput);
 		scrollPane3.setBounds(10, 67, 463, 284);
@@ -551,6 +553,8 @@ public class StaffSystem extends JFrame {
 		table.setBounds(10, 40, 463, 265);
 		productStock.add(table);
 		table.setFont(tableFont);
+		SystemTool.tableSet(table);
+
 		
 		JScrollPane we = new JScrollPane(table);
 		we.setBounds(10, 40, 463, 284);
@@ -795,8 +799,13 @@ public class StaffSystem extends JFrame {
 					for (Member OD : memberList) {
 						new MemberServiceImpl().update(OD);
 					}
-					((AbstractTableModel) memberOutput.getModel()).fireTableDataChanged();
-					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
+					List<Member> memberrrr = new MemberServiceImpl().itsMember();
+	        		List<Object> object = new ArrayList<>(memberrrr);
+	        		JTable newTable = SystemTool.setForObject(object, member);
+			        SystemTool.tableSet(newTable);
+			        scrollPane.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        memberOutput = newTable;
+			        JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "同步失敗：" + ex.getMessage());
@@ -815,8 +824,13 @@ public class StaffSystem extends JFrame {
 				if (selectedRow != -1) {
 	            	Member pro=memberList.get(selectedRow);
 	            	new MemberServiceImpl().delete(pro);
-	            	((AbstractTableModel) memberOutput.getModel()).fireTableDataChanged(); // 更新 JTable
-	                JOptionPane.showMessageDialog(null, "刪除完成！");
+	            	List<Member> memberrrr = new MemberServiceImpl().itsMember();
+	        		List<Object> object = new ArrayList<>(memberrrr);
+	        		JTable newTable = SystemTool.setForObject(object, member);
+			        SystemTool.tableSet(newTable);
+			        scrollPane.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        memberOutput = newTable;
+			        JOptionPane.showMessageDialog(null, "刪除完成！");
 				} else {
 	                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
 	            }	
@@ -866,8 +880,13 @@ public class StaffSystem extends JFrame {
 					for (Member od : memberList) {
 						new MemberServiceImpl().update(od);
 					}
-					((AbstractTableModel) freeCustOutput.getModel()).fireTableDataChanged();
-					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
+					List<Member> free = new MemberServiceImpl().notMember();
+	        		List<Object> objectFree = new ArrayList<>(free);
+	        		JTable newTable = SystemTool.setForObject(objectFree, member);
+			        SystemTool.tableSet(newTable);
+			        scrollPaneoo.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        freeCustOutput = newTable;
+			        JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "同步失敗：" + ex.getMessage());
@@ -886,8 +905,13 @@ public class StaffSystem extends JFrame {
 				if (selectedRow != -1) {
 	            	Member pro=memberList.get(selectedRow);
 	            	new MemberServiceImpl().delete(pro);
-	            	((AbstractTableModel) freeCustOutput.getModel()).fireTableDataChanged(); // 更新 JTable
-	                JOptionPane.showMessageDialog(null, "刪除完成！");
+	            	List<Member> free = new MemberServiceImpl().notMember();
+	        		List<Object> objectFree = new ArrayList<>(free);
+	        		JTable newTable = SystemTool.setForObject(objectFree, member);
+			        SystemTool.tableSet(newTable);
+			        scrollPaneoo.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        freeCustOutput = newTable;
+			        JOptionPane.showMessageDialog(null, "刪除完成！");
 				} else {
 	                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
 	            }	
@@ -924,8 +948,13 @@ public class StaffSystem extends JFrame {
 					for (Staff op : staffList) {
 						new StaffServiceImpl().updateAll(op);
 					}
-					((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged();
-					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
+					List<Staff> staffff = new StaffServiceImpl().allStaff();
+	        		List<Object> objectStaff = new ArrayList<>(staffff);
+	        		JTable newTable = SystemTool.setForObject(objectStaff, staff);
+			        SystemTool.tableSet(newTable);
+			        scrollPane3.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        staffOutput = newTable;
+			        JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "同步失敗：" + ex.getMessage());
@@ -944,8 +973,13 @@ public class StaffSystem extends JFrame {
 				if (selectedRow != -1) {
 	            	Staff pro=staffList.get(selectedRow);
 	            	new StaffServiceImpl().deleteStaff(pro.getStaffNumber());
-	            	((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged(); // 更新 JTable
-	                JOptionPane.showMessageDialog(null, "刪除完成！");
+	            	List<Staff> staffff = new StaffServiceImpl().allStaff();
+	        		List<Object> objectStaff = new ArrayList<>(staffff);
+	        		JTable newTable = SystemTool.setForObject(objectStaff, staff);
+			        SystemTool.tableSet(newTable);
+			        scrollPane3.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        staffOutput = newTable;
+	            	JOptionPane.showMessageDialog(null, "刪除完成！");
 				} else {
 	                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
 	            }		
@@ -972,8 +1006,13 @@ public class StaffSystem extends JFrame {
 					staffPasswordField.setText("");
 					staffPhoneField.setText("");
 	                JOptionPane.showMessageDialog(null, "新增員工完成！");
-	                ((AbstractTableModel) staffOutput.getModel()).fireTableDataChanged();
-				}else {
+	                List<Staff> staffff = new StaffServiceImpl().allStaff();
+	        		List<Object> objectStaff = new ArrayList<>(staffff);
+	        		JTable newTable = SystemTool.setForObject(objectStaff, staff);
+			        SystemTool.tableSet(newTable);
+			        scrollPane3.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        staffOutput = newTable;
+			        }else {
 	                JOptionPane.showMessageDialog(null, "資料必須填寫");
 
 				}
@@ -1031,8 +1070,12 @@ public class StaffSystem extends JFrame {
 							new OrderItemServiceImpl().update(item);
 						}
 					}
-					((AbstractTableModel) orderOutput.getModel()).fireTableDataChanged();
-					JOptionPane.showMessageDialog(null, "資料已成功同步至資料庫！");
+					OrderData orderta = new OrderData();
+	        		JTable newTable = SystemTool.createOrderDataTable(orderta);
+			        SystemTool.tableSet(newTable);
+			        scrollPane3.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        orderOutput = newTable;
+			        JOptionPane.showMessageDialog(null, "資料已成功同步至資料庫！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
 					JOptionPane.showMessageDialog(null, "同步失敗：" + ex.getMessage());
@@ -1074,7 +1117,13 @@ public class StaffSystem extends JFrame {
 						orderAll = od.getOrderall();
 						new OrderAllServiceImpl().deleteOrder(orderAll.getOrderNumber());
 					}
-					((AbstractTableModel) orderOutput.getModel()).fireTableDataChanged();
+
+					OrderData orderta = new OrderData();
+	        		JTable newTable = SystemTool.createOrderDataTable(orderta);
+			        SystemTool.tableSet(newTable);
+			        scrollPane3.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        orderOutput = newTable;
+			        
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -1103,7 +1152,13 @@ public class StaffSystem extends JFrame {
 					productOverviewField.setText("");
 					productCostField.setValue(0);
 					productPriceField.setValue(0);	
-					((AbstractTableModel) productOutput.getModel()).fireTableDataChanged();
+					
+					List<Product> product = new ProductServiceImpl().allProduct();
+	        		List<Object> objectproduct = new ArrayList<>(product);
+	        		JTable newTable = SystemTool.setForObject(objectproduct, new Product());
+			        SystemTool.tableSet(newTable);
+			        sayHi.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        productOutput = newTable;
 				}else {
 					JOptionPane.showMessageDialog(null, "新增產品失敗，請確認是否有未填寫的地方");					
 				}
@@ -1155,7 +1210,14 @@ public class StaffSystem extends JFrame {
 					for (Product od : productList) {
 						new ProductServiceImpl().productUpdate(od);
 					}
-					((AbstractTableModel) productOutput.getModel()).fireTableDataChanged();
+					
+					List<Product> product = new ProductServiceImpl().allProduct();
+	        		List<Object> objectproduct = new ArrayList<>(product);
+	        		JTable newTable = SystemTool.setForObject(objectproduct, new Product());
+			        SystemTool.tableSet(newTable);
+			        sayHi.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        productOutput = newTable;
+			        
 					JOptionPane.showMessageDialog(null, "資料已成功從資料庫刪除！");
 				} catch (Exception ex) {
 					ex.printStackTrace();
@@ -1175,7 +1237,13 @@ public class StaffSystem extends JFrame {
 		            if (selectedRow != -1) {
 		            	Product pro=productList.get(selectedRow);
 		            	new ProductServiceImpl().deleteProduct(pro.getProductNumber());
-		            	((AbstractTableModel) productOutput.getModel()).fireTableDataChanged(); // 更新 JTable
+		            	
+		            	List<Product> product = new ProductServiceImpl().allProduct();
+		        		List<Object> objectproduct = new ArrayList<>(product);
+		        		JTable newTable = SystemTool.setForObject(objectproduct, new Product());
+				        SystemTool.tableSet(newTable);
+				        sayHi.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+				        productOutput = newTable; // 更新 table 的參考變數（如果你還要用它的話）
 		            } else {
 		                JOptionPane.showMessageDialog(null, "請選擇一列來刪除！");
 		            }			
@@ -1204,7 +1272,13 @@ public class StaffSystem extends JFrame {
 					JOptionPane.showMessageDialog(null, "確認進貨");
 					spinner.setValue(0);
 					nameForStock.setSelectedIndex(0);
-					((AbstractTableModel) table.getModel()).fireTableDataChanged();
+					
+					List<ProductSystemView> productStockList = new ProductSystemViewDaoImpl().getByAll();
+			        List<Object> objectproductStockList = new ArrayList<>(productStockList);
+			        JTable newTable = SystemTool.setForObject(objectproductStockList, new ProductSystemView());
+			        SystemTool.tableSet(newTable);
+			        we.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        table = newTable; // 更新 table 的參考變數（如果你還要用它的話）
 				}
 				JOptionPane.showMessageDialog(null, "");
 			}
@@ -1229,7 +1303,13 @@ public class StaffSystem extends JFrame {
 					JOptionPane.showMessageDialog(null, "確認出貨");
 					spinner_1.setValue(0);
 					nameForStock.setSelectedIndex(0);
-					((AbstractTableModel) table.getModel()).fireTableDataChanged();
+
+					List<ProductSystemView> productStockList = new ProductSystemViewDaoImpl().getByAll();
+			        List<Object> objectproductStockList = new ArrayList<>(productStockList);
+			        JTable newTable = SystemTool.setForObject(objectproductStockList, new ProductSystemView());
+			        SystemTool.tableSet(newTable);
+			        we.setViewportView(newTable); // 假設你原本有 scrollPane 包著舊的 table
+			        table = newTable; // 更新 table 的參考變數（如果你還要用它的話）
 				}
 				JOptionPane.showMessageDialog(null, "");
 			}
@@ -1276,8 +1356,7 @@ public class StaffSystem extends JFrame {
 		printButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-				ReporterTool.forPrint(viewPrintOutput, getWarningString(), getName());
-				
+				ReporterTool.forPrint(viewPrintOutput, getWarningString(), getName());				
 			}
 		});
 		printButton.setFont(new Font("微軟正黑體", Font.BOLD, 15));

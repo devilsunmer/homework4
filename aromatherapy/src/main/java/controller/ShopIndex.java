@@ -1115,7 +1115,6 @@ public class ShopIndex extends JFrame {
 				cardLayoutForChange.show(cardPanel, "shopIndex");
 				cardPanel.revalidate();
 				cardPanel.repaint();
-
 			}
 		});
 		enterUpdateButton_1_1_1.setFont(new Font("微軟正黑體", Font.BOLD, 14));
