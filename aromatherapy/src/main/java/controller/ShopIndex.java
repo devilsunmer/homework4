@@ -833,6 +833,8 @@ public class ShopIndex extends JFrame {
 					FileTool.saveFiled(orderData, "custOrderNotyet.txt");
 					cardLayoutForChange.show(cardPanel, "forCustOrder");
 					JOptionPane.showMessageDialog(null, "請先填寫寄送資料。");
+					cardPanel.revalidate();
+	    			cardPanel.repaint();
 				}
 				
 			}
@@ -1110,8 +1112,10 @@ public class ShopIndex extends JFrame {
 		enterUpdateButton_1_1_1.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
-		        CardLayout cardLayoutFor = (CardLayout) cardPanel.getLayout();
-				cardLayoutFor.show(cardPanel, "shopIndex");
+				cardLayoutForChange.show(cardPanel, "shopIndex");
+				cardPanel.revalidate();
+				cardPanel.repaint();
+
 			}
 		});
 		enterUpdateButton_1_1_1.setFont(new Font("微軟正黑體", Font.BOLD, 14));
@@ -1177,51 +1181,52 @@ public class ShopIndex extends JFrame {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String currentCard = ButtonTool.getCurrentCard(cardPanel);
-		        CardLayout cardLayoutFor = (CardLayout) cardPanel.getLayout();
 		        if (member!=null) {
 		            // ✅ 已登入 → 修改會員資料頁面（fresh）
-		        	cardLayoutFor.show(cardPanel, "shopIndex");
+		        	cardLayoutForChange.show(cardPanel, "shopIndex");
 		        } else {
 		            if ("login".equals(currentCard)) {
 		                // 回到首頁
-		            	cardLayoutFor.show(cardPanel, "shopIndex");
+		            	cardLayoutForChange.show(cardPanel, "shopIndex");
 		            } else{
-		            	cardLayoutFor.show(cardPanel, "login");		            	
+		            	cardLayoutForChange.show(cardPanel, "login");		            	
 		            }
 		        }
 		        ButtonTool.updateButtonText(ButtonTool.getCurrentCard(cardPanel), member!=null, loginButton, changeButton);
+		        cardPanel.revalidate();
+    			cardPanel.repaint();
 			}
 		});
 		changeButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String currentCard = ButtonTool.getCurrentCard(cardPanel);
-		        CardLayout cardLayoutFor = (CardLayout) cardPanel.getLayout();
 		        if (member!=null) {
 		            // ✅ 已登入 → 修改會員資料頁面（fresh）
-		        	cardLayoutFor.show(cardPanel, "fresh");
+		        	cardLayoutForChange.show(cardPanel, "fresh");
 		        } else {
 		            if ("create".equals(currentCard)) {
 		                // 回到首頁
-		            	cardLayoutFor.show(cardPanel, "shopIndex");		            	
+		            	cardLayoutForChange.show(cardPanel, "shopIndex");		            	
 		            }else {
 		                // 未登入 → 進入加入會員頁面
-		            	cardLayoutFor.show(cardPanel, "create");
+		            	cardLayoutForChange.show(cardPanel, "create");
 		            }
 		        }
 		        ButtonTool.updateButtonText(ButtonTool.getCurrentCard(cardPanel), member!=null, loginButton, changeButton);
+		        cardPanel.revalidate();
+    			cardPanel.repaint();
 			}
 		});
 		orderSearchButton.addMouseListener(new MouseAdapter() {
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				String currentCard = ButtonTool.getCurrentCard(cardPanel);
-		        CardLayout cardLayoutFor = (CardLayout) cardPanel.getLayout();
 	            if ("orderCheck".equals(currentCard)) {
-	            	cardLayoutFor.show(cardPanel, "shopIndex");
+	            	cardLayoutForChange.show(cardPanel, "shopIndex");
 	            	orderSearchButton.setText("查詢訂單");
 	            }else {
-	            	cardLayoutFor.show(cardPanel, "orderCheck");
+	            	cardLayoutForChange.show(cardPanel, "orderCheck");
 	            	orderSearchButton.setText("回購物頁");
 	            }
 	            
@@ -1233,6 +1238,8 @@ public class ShopIndex extends JFrame {
 				}else {
 					ButtonTool.searchFreeOrder(orderOutput, freename, freephone);
 				}
+				cardPanel.revalidate();
+    			cardPanel.repaint();
 			}
 		});
 
