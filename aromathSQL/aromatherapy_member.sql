@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `aromatherapy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `aromatherapy`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: aromatherapy
@@ -16,29 +18,31 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `product_stock`
+-- Table structure for table `member`
 --
 
-DROP TABLE IF EXISTS `product_stock`;
+DROP TABLE IF EXISTS `member`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `product_stock` (
-  `productNumber` varchar(45) NOT NULL,
-  `productInStock` int DEFAULT NULL,
-  `productOutStock` int DEFAULT NULL,
-  `productStockDate` date DEFAULT NULL,
-  PRIMARY KEY (`productNumber`)
+CREATE TABLE `member` (
+  `memberNumber` varchar(20) DEFAULT NULL,
+  `memberName` varchar(45) DEFAULT NULL,
+  `memberUsername` varchar(45) DEFAULT NULL,
+  `memberPassword` varchar(45) DEFAULT NULL,
+  `memberAddress` varchar(45) DEFAULT NULL,
+  `memberPhone` varchar(45) DEFAULT NULL,
+  `memberOrNot` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `product_stock`
+-- Dumping data for table `member`
 --
 
-LOCK TABLES `product_stock` WRITE;
-/*!40000 ALTER TABLE `product_stock` DISABLE KEYS */;
-INSERT INTO `product_stock` VALUES ('p001',75,10,NULL),('p002',0,15,NULL);
-/*!40000 ALTER TABLE `product_stock` ENABLE KEYS */;
+LOCK TABLES `member` WRITE;
+/*!40000 ALTER TABLE `member` DISABLE KEYS */;
+INSERT INTO `member` VALUES ('m001','小可愛','test1','a123','taipei','0911111111',1),('m002','花甲','test2','re43','永和區','0999999999',0),('m003','大可愛','test3','me12','taipei','0911111110',0),('m004','小醜醜','test4','q34','路邊撿來的','0912121212',0),('m002-1','大可愛','','','新北市','0900000000',0),('m005','qwe','qw','','1','',1),('m006','qwe','qwe1','q123','qwe','0911111111',1),('m007','hy','hy6','hy6','hy6','0912345678',1),('m008','小測試','user1','u123','789','0987654321',1),('m009','王大維','user1','u123','u123','0987654321',1);
+/*!40000 ALTER TABLE `member` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +54,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-26 10:42:41
+-- Dump completed on 2025-08-26 10:47:23

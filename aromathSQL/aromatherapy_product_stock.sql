@@ -1,3 +1,5 @@
+CREATE DATABASE  IF NOT EXISTS `aromatherapy` /*!40100 DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci */ /*!80016 DEFAULT ENCRYPTION='N' */;
+USE `aromatherapy`;
 -- MySQL dump 10.13  Distrib 8.0.43, for Win64 (x86_64)
 --
 -- Host: localhost    Database: aromatherapy
@@ -16,29 +18,29 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
--- Table structure for table `staff`
+-- Table structure for table `product_stock`
 --
 
-DROP TABLE IF EXISTS `staff`;
+DROP TABLE IF EXISTS `product_stock`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `staff` (
-  `staffNumber` varchar(45) DEFAULT NULL,
-  `staffName` varchar(45) DEFAULT NULL,
-  `staffUsername` varchar(45) DEFAULT NULL,
-  `staffPassword` varchar(45) DEFAULT NULL,
-  `staffPhone` varchar(45) DEFAULT NULL
+CREATE TABLE `product_stock` (
+  `productNumber` varchar(45) NOT NULL,
+  `productInStock` int DEFAULT NULL,
+  `productOutStock` int DEFAULT NULL,
+  `productStockDate` date DEFAULT NULL,
+  PRIMARY KEY (`productNumber`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `staff`
+-- Dumping data for table `product_stock`
 --
 
-LOCK TABLES `staff` WRITE;
-/*!40000 ALTER TABLE `staff` DISABLE KEYS */;
-INSERT INTO `staff` VALUES ('s001','王老闆','boss1','boss1','0988888888'),('s002','王小弟','staff1','s123','0900000000'),('s003','張公公','sta2','qweq123','0900001100'),('s004','盧卡斯','qoo2','tr543','0977777777');
-/*!40000 ALTER TABLE `staff` ENABLE KEYS */;
+LOCK TABLES `product_stock` WRITE;
+/*!40000 ALTER TABLE `product_stock` DISABLE KEYS */;
+INSERT INTO `product_stock` VALUES ('p001',75,10,NULL),('p002',0,15,NULL);
+/*!40000 ALTER TABLE `product_stock` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
@@ -50,4 +52,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2025-08-26 10:42:41
+-- Dump completed on 2025-08-26 10:47:22
